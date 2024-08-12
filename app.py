@@ -27,7 +27,7 @@ def main():
         df = pd.read_csv(csv_file)
         
         # Check if the CSV has a 'text' column
-        if 'text' not in df.columns:
+        if 'Workflow' not in df.columns:
             st.error("CSV file must contain a 'text' column.")
             return
         
@@ -44,14 +44,14 @@ def main():
                 user_embedding = model.encode(user_text, convert_to_tensor=True)
                 
                 # Compute embeddings for each text in the CSV
-                df['embedding'] = df['text'].apply(lambda x: model.encode(x, convert_to_tensor=True))
+                df['embedding'] = df['Workflow'].apply(lambda x: model.encode(x, convert_to_tensor=True))
                 
                 # Calculate cosine similarity for each row
                 df['similarity'] = df['embedding'].apply(lambda emb: util.pytorch_cos_sim(user_embedding, emb).item())
                 
                 # Display results
                 st.write("Similarity Scores:")
-                st.dataframe(df[['text', 'similarity']].sort_values(by='similarity', ascending=False))
+                st.dataframe(df[['Workflow', 'similarity']].sort_values(by='similarity', ascending=False))
             else:
                 st.write("Please enter some text.")
     else:
